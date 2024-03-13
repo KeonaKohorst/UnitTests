@@ -12,20 +12,27 @@ class ValidationMethods{
     }
     
     public function validateName($name){
+        //sanitize spaces
+        $name = trim($name);
+        $string = preg_replace('/\s+/', '', $string);
+        $string = preg_replace('/\t+/', '', $string);
+        $string = preg_replace('/\n\r+/', '', $string);
+        
+        //check for non alphabetic characters
         if(ctype_alpha(str_replace(' ', '', $name)) === false){
-            $ErrMsg = "Name must contain letters and spaces only";
+            $ErrMsg = "Name must contain letters and spaces only\n";
             echo $ErrMsg;
             
             return "Invalid";
         }else{
-            echo ":" . $name . ":";
+            echo ":" . $name . ":\n";
             return "Valid";
         }
     }
     
     public function validateURL($url){
         if(filter_var($url, FILTER_VALIDATE_URL) === false){
-            $ErrMsg = "Not a valid URL";
+            $ErrMsg = "Not a valid URL\n";
             echo $ErrMsg;
             return "Invalid";
         }else{
