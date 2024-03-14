@@ -14,9 +14,10 @@ class ValidationMethods{
     public function validateName($name){
         //sanitize spaces
         $name = trim($name);
-        $string = preg_replace('/\s+/', '', $string);
-        $string = preg_replace('/\t+/', '', $string);
-        $string = preg_replace('/\n\r+/', '', $string);
+        $name = preg_replace('/\s\s+/', '', $name);
+        $name = preg_replace('/\t+/', '', $name);
+        $name = preg_replace('/\n\r+/', '', $name);
+        $name = ucwords(strtolower($name));
         
         //check for non alphabetic characters
         if(ctype_alpha(str_replace(' ', '', $name)) === false){
@@ -36,6 +37,26 @@ class ValidationMethods{
             echo $ErrMsg;
             return "Invalid";
         }else{
+            return "Valid";
+        }
+    }
+    
+    public function validateTitle($title){
+        $title = trim($title);
+        $title = preg_replace('/\s\s+/', '', $title);
+        $title = preg_replace('/\t+/', '', $title);
+        $title = preg_replace('/\n\r+/', '', $title);
+        $title = ucwords(strtolower($title));
+        
+        //check to make sure it contains some letters
+        $contains_letters = preg_match('/\pL/', $title);
+        
+        if(!$contains_letters){
+            $ErrMsg = "Title must contain alphabetic characters\n";
+            echo $ErrMsg;
+            return "Invalid";
+        }else{
+            echo $title . "\n";
             return "Valid";
         }
     }
@@ -129,6 +150,39 @@ class TestValidationMethods extends \PHPUnit\Framework\TestCase{
                 $tester = new ValidationMethods();
                 $result = $tester->validateURL("https://forums.phpfreaks.com/topic/284903-allow-only-letters-numbers-dash-underscore-or-space/");
                 $this->assertEquals("Valid", $result);
+        }
+        
+        /*
+         * Title field validation tests
+         */
+        public function testTitleValidation1(){
+                $tester = new ValidationMethods();
+                $result = $tester->validateTitle("i am a regular title");
+                $this->assertEquals("Valid", $result);
+        }
+        
+        public function testTitleValidation2(){
+                $tester = new ValidationMethods();
+                $result = $tester->validateTitle("234987239484");
+                $this->assertEquals("Invalid", $result);
+        }
+        
+        public function testTitleValidation3(){
+                $tester = new ValidationMethods();
+                $result = $tester->validateTitle("This is a title!");
+                $this->assertEquals("Valid", $result);
+        }
+        
+        public function testTitleValidation4(){
+                $tester = new ValidationMethods();
+                $result = $tester->validateTitle("I contain letters and numb3r5!");
+                $this->assertEquals("Valid", $result);
+        }
+        
+        public function testTitleValidation5(){
+                $tester = new ValidationMethods();
+                $result = $tester->validateTitle("#$%^&*&^%$#%^&!");
+                $this->assertEquals("Invalid", $result);
         }
 }
 
