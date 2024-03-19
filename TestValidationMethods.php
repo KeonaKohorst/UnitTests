@@ -151,6 +151,14 @@ class TestValidationMethods extends \PHPUnit\Framework\TestCase{
                 $result = $tester->validateURL("https://forums.phpfreaks.com/topic/284903-allow-only-letters-numbers-dash-underscore-or-space/");
                 $this->assertEquals("Valid", $result);
         }
+
+        public function testURLValidation6(){
+                $tester = new ValidationMethods();
+                $result = $tester->validateURL("https://www.google.com");
+                $this->assertEquals("Valid", $result);
+        }
+
+        
         
         /*
          * Title field validation tests
@@ -182,6 +190,12 @@ class TestValidationMethods extends \PHPUnit\Framework\TestCase{
         public function testTitleValidation5(){
                 $tester = new ValidationMethods();
                 $result = $tester->validateTitle("#$%^&*&^%$#%^&!");
+                $this->assertEquals("Invalid", $result);
+        }
+
+        public function testTitleValidation6(){
+                $tester = new ValidationMethods();
+                $result = $tester->validateTitle("             ");
                 $this->assertEquals("Invalid", $result);
         }
 }
