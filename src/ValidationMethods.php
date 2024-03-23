@@ -30,12 +30,7 @@ class ValidationMethods{
      */
     public function validate_name($name){
         //sanitize spaces
-        //$name = sanitize_string($name);
-        $name = trim($name);
-        $name = preg_replace('/\s\s+/', '', $name);
-        $name = preg_replace('/\t+/', '', $name);
-        $name = preg_replace('/\n\r+/', '', $name);
-        $name = ucwords(strtolower($name)); //put in title case
+        $name = $this->sanitize_string($name);
         
         //check for non alphabetic characters
         if(!$this->only_letters($name)){
@@ -78,12 +73,7 @@ class ValidationMethods{
      * @return bool
      */
     public function validate_title($title){
-        //$title = this->sanitize_string($title);
-        $title = trim($title);
-        $title = preg_replace('/\s\s+/', '', $title);
-        $title = preg_replace('/\t+/', '', $title);
-        $title = preg_replace('/\n\r+/', '', $title);
-        $title = ucwords(strtolower($title)); //put in title case
+        $title = $this->sanitize_string($title);
         
         if(!$this->contains_letters($title)){
             $result_message = "Title " . $title . " must contain alphabetic characters\n";
