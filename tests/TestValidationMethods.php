@@ -175,31 +175,49 @@ class TestValidationMethods extends \PHPUnit\Framework\TestCase{
                 $this->assertEquals(0, $result);
         }
         
+        public function test_contains_letters_4(){
+                $tester = new ValidationMethods();
+                $result = $tester->contains_letters("&amp;");
+                $this->assertEquals(0, $result);
+        }
+        
         /*
          * Test sanitize string
          */
         public function test_sanitize_string(){
                 $tester = new ValidationMethods();
-                $result = $tester->sanitize_string("      name      ");
+                $result = $tester->sanitize_string("      name      ", true);
                 $this->assertEquals("Name", $result);
         }
         
         public function test_sanitize_string_2(){
                 $tester = new ValidationMethods();
-                $result = $tester->sanitize_string("   ");
+                $result = $tester->sanitize_string("   ", true);
                 $this->assertEquals("", $result);
         }
         
         public function test_sanitize_string_3(){
                 $tester = new ValidationMethods();
-                $result = $tester->sanitize_string("\n\n\t\r YO");
+                $result = $tester->sanitize_string("\n\n\t\r YO", true);
                 $this->assertEquals("Yo", $result);
         }
         
         public function test_sanitize_string_4(){
                 $tester = new ValidationMethods();
-                $result = $tester->sanitize_string("two   words");
+                $result = $tester->sanitize_string("two   words", true);
                 $this->assertEquals("Two Words", $result);
+        }
+        
+        public function test_sanitize_string_5(){
+                $tester = new ValidationMethods();
+                $result = $tester->sanitize_string("two   words", false);
+                $this->assertEquals("two words", $result);
+        }
+        
+        public function test_sanitize_string_6(){
+                $tester = new ValidationMethods();
+                $result = $tester->sanitize_string("<div>html injection</div>", false);
+                $this->assertEquals("html injection", $result);
         }
         
         /*

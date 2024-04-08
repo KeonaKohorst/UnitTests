@@ -30,7 +30,7 @@ class ValidationMethods{
      */
     public function validate_name($name){
         //sanitize spaces
-        $name = $this->sanitize_string($name);
+        $name = $this->sanitize_string($name, true);
         
         //check for non alphabetic characters
         if(!$this->only_letters($name)){
@@ -73,7 +73,7 @@ class ValidationMethods{
      * @return bool
      */
     public function validate_title($title){
-        $title = $this->sanitize_string($title);
+        $title = $this->sanitize_string($title, true);
         
         if(!$this->contains_letters($title)){
             $result_message = "Title " . $title . " must contain alphabetic characters\n";
@@ -94,6 +94,7 @@ class ValidationMethods{
      * @return bool
      */
     public function validate_description($description){
+        $description = $this->sanitize_string($description, false);
         if(!$this->contains_letters($description)){
             $result_message = "Description " . $description . " must contain alphabetic characters\n";
             echo $result_message;
@@ -110,14 +111,18 @@ class ValidationMethods{
     * and returns the sanitized string
     * 
     * @param string $string The string to sanitize
+    * @param boolean $title Boolean indicating whether string should be in title case
     */
-   public function sanitize_string($string){
+   public function sanitize_string($string, $title){
        echo "String to sanitize" . $string . " : ";
+       $string = filter_var($string, FILTER_SANITIZE_STRING);
        $string = trim($string);
        $string = preg_replace('/\s\s+/', ' ', $string);
        $string = preg_replace('/\t+/', '', $string);
        $string = preg_replace('/\n\r+/', '', $string);
-       $string = ucwords(strtolower($string)); //put in title case
+       if($title){
+         $string = ucwords(strtolower($string)); //put in title case
+       }
        
        echo "Sanitized: " . $string . "\n";
 
@@ -131,6 +136,13 @@ class ValidationMethods{
     */
    public function contains_letters($value){
        $contains_letters = preg_match('/\pL/', $value);
+       
+       if($value === "&amp;"){
+           //the rich text editor turns & into &amp and it makes this function
+           //think there is a letter so this is to fix that
+           $contains_letters = 0;
+           return $contains_letters;
+       }
        return $contains_letters;
    }
    
